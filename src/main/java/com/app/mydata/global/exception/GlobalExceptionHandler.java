@@ -2,11 +2,7 @@ package com.app.mydata.global.exception;
 
 import com.app.mydata.domain.member.exception.MemberException;
 import com.app.mydata.domain.member.exception.MemberNotFoundException;
-import com.app.mydata.domain.mydata.exception.MydataFundException;
-import com.app.mydata.domain.mydata.exception.MydataFundNotFoundException;
-import com.app.mydata.domain.mydata.exception.MydataRiaAccountException;
-import com.app.mydata.domain.mydata.exception.MydataTradeException;
-import com.app.mydata.domain.mydata.exception.MydataTradeNotFoundException;
+import com.app.mydata.domain.mydata.exception.*;
 import com.app.mydata.global.response.ApiResponseDTO;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -48,6 +44,10 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ApiResponseDTO<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
     return validationError(e.getBindingResult());
+  }
+  @ExceptionHandler(MydataRiaAccountNotFoundException.class)
+  public ResponseEntity<ApiResponseDTO<Void>> handleMydataRiaAccountNotFound(MydataRiaAccountNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseDTO.of(e.getMessage()));
   }
 
   // 4. MydataFund
