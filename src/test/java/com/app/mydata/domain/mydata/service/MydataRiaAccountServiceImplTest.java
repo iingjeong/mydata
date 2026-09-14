@@ -6,6 +6,7 @@ import com.app.mydata.domain.mydata.dto.request.MydataRiaAccountRequestDTO;
 import com.app.mydata.domain.mydata.dto.request.RiaAccountRequestDTO;
 import com.app.mydata.domain.mydata.dto.response.MydataRiaAccountResponseDTO;
 import com.app.mydata.domain.mydata.exception.MydataRiaAccountException;
+import com.app.mydata.domain.mydata.exception.MydataRiaAccountNotFoundException;
 import com.app.mydata.domain.mydata.mapper.MydataKeyMapper;
 import com.app.mydata.domain.mydata.mapper.MydataRiaAccountMapper;
 import org.junit.jupiter.api.Test;
@@ -73,7 +74,7 @@ class MydataRiaAccountServiceImplTest {
         when(mydataKeyMapper.existsByCiHash(ciHash)).thenReturn(0);
 
         assertThatThrownBy(() -> mydataRiaAccountService.getAccountsByCiHash(request))
-                .isInstanceOf(MydataRiaAccountException.class)
+                .isInstanceOf(MydataRiaAccountNotFoundException.class)
                 .hasMessage("등록되지 않은 CiHash입니다.");
 
         verifyNoInteractions(mydataRiaAccountMapper);
@@ -186,7 +187,7 @@ class MydataRiaAccountServiceImplTest {
         when(mydataKeyMapper.existsByCiHash("unknown-ci-hash")).thenReturn(0);
 
         assertThatThrownBy(() -> mydataRiaAccountService.syncRiaAccount(request))
-                .isInstanceOf(MydataRiaAccountException.class)
+                .isInstanceOf(MydataRiaAccountNotFoundException.class)
                 .hasMessage("등록되지 않은 사용자 입니다.");
 
         verifyNoInteractions(mydataRiaAccountMapper);
