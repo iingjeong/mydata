@@ -5,6 +5,7 @@ import com.app.mydata.domain.mydata.dto.request.MydataRiaAccountRequestDTO;
 import com.app.mydata.domain.mydata.dto.request.RiaAccountRequestDTO;
 import com.app.mydata.domain.mydata.dto.response.MydataRiaAccountResponseDTO;
 import com.app.mydata.domain.mydata.exception.MydataRiaAccountException;
+import com.app.mydata.domain.mydata.exception.MydataRiaAccountNotFoundException;
 import com.app.mydata.domain.mydata.mapper.MydataKeyMapper;
 import com.app.mydata.domain.mydata.mapper.MydataRiaAccountMapper;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class MydataRiaAccountServiceImpl implements MydataRiaAccountService {
         String ciHash = request.getCiHash();
 
         if (mydataKeyMapper.existsByCiHash(ciHash) == 0) {
-            throw new MydataRiaAccountException("등록되지 않은 CiHash입니다.");
+            throw new MydataRiaAccountNotFoundException("등록되지 않은 CiHash입니다.");
         }
 
         List<MydataRiaAccountDTO> accounts = mydataRiaAccountMapper.selectByCiHash(ciHash);
@@ -43,7 +44,7 @@ public class MydataRiaAccountServiceImpl implements MydataRiaAccountService {
     public MydataRiaAccountResponseDTO syncRiaAccount(RiaAccountRequestDTO riaAccountRequestDTO) {
         MydataRiaAccountDTO riaAccountDTO = riaAccountRequestDTO.toDTO();
         if (mydataKeyMapper.existsByCiHash(riaAccountDTO.getCiHash()) == 0) {
-            throw new MydataRiaAccountException("등록되지 않은 사용자 입니다.");
+            throw new MydataRiaAccountNotFoundException("등록되지 않은 사용자 입니다.");
         }
 
         mydataRiaAccountMapper.upsertAccount(riaAccountDTO);

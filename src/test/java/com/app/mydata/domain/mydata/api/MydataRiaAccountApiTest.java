@@ -3,7 +3,7 @@ package com.app.mydata.domain.mydata.api;
 import com.app.mydata.domain.mydata.dto.request.MydataRiaAccountRequestDTO;
 import com.app.mydata.domain.mydata.dto.request.RiaAccountRequestDTO;
 import com.app.mydata.domain.mydata.dto.response.MydataRiaAccountResponseDTO;
-import com.app.mydata.domain.mydata.exception.MydataRiaAccountException;
+import com.app.mydata.domain.mydata.exception.MydataRiaAccountNotFoundException;
 import com.app.mydata.domain.mydata.service.MydataRiaAccountService;
 import com.app.mydata.global.exception.GlobalExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -90,9 +90,9 @@ class MydataRiaAccountApiTest {
     }
 
     @Test
-    void getRiaAccountsReturnsBadRequestWhenCiHashUnregistered() throws Exception {
+    void getRiaAccountsReturnsNotFoundWhenCiHashUnregistered() throws Exception {
         when(mydataRiaAccountService.getAccountsByCiHash(any()))
-                .thenThrow(new MydataRiaAccountException("등록되지 않은 CiHash입니다."));
+                .thenThrow(new MydataRiaAccountNotFoundException("등록되지 않은 CiHash입니다."));
 
         MydataRiaAccountRequestDTO request = MydataRiaAccountRequestDTO.builder()
                 .ciHash("unknown-ci-hash")
@@ -101,7 +101,7 @@ class MydataRiaAccountApiTest {
         mockMvc.perform(post("/api/mydata/ria-accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("등록되지 않은 CiHash입니다."));
     }
 
